@@ -1,5 +1,4 @@
-# server-bases-with-login
-server bases with login and create user db mongo
+# MERN Auth - Signup & Login with Email (JWT) | Node, Express, MongoDB
 
 What's Up Guys,
 
