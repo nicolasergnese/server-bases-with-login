@@ -1,21 +1,24 @@
-/* const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const Joi = require('joi');
-const { number } = require('joi');
+const router = require('express').Router();
 
-const chartSchema = new mongoose.Schema({ //attributi chart
-    labels: {type: number, required:true}, // asse x
-    datasets: {type: number, required:true}
-});
 
-const Chart = mongoose.model("chart",chartSchema);
+router.get("/chart", async(req,res)=>{ 
+    //console.log(req.body) //mando dal server
+    let numeriCasuali = []; //per generare numeri casuali, ma non s come metterli
+          for (let i = 0; i < 10; i++) { //riempio array
+            numeriCasuali.push(Math.floor(Math.random()*90));
+          }
+    return res.status(201).send(numeriCasuali);
+    //console.log(req.body)
 
-const validate = (data) =>{ //serve?
-    const schema = Joi.object({
-        labels: Joi.number().required().label('Labels'),
-        datasets: Joi.number().required().label('Datasets'),
-    });
-    return schema.validate(data);
-};
+})
 
-module.exports = {Chart, validate}; */
+//listen for request on port 4000
+/* router.post("/numeriCasuali", (req, res) => {
+    let numeriCasuali = []; //per generare numeri casuali, ma non s come metterli
+          for (let i = 0; i < 100; i++) { //riempio array
+            numeriCasuali.push(Math.floor(Math.random()*90));
+          }
+      res.json(numeriCasuali);
+  }) */
+
+module.exports = router;
