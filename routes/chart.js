@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 
-router.get("/chart", async(req,res)=>{ 
+router.post("/chart", async(req,res)=>{ 
     //console.log(req.body) //mando dal server
     let numeriCasuali = []; //per generare numeri casuali, ma non s come metterli
           for (let i = 0; i < 10; i++) { //riempio array
