@@ -1,51 +1,48 @@
-/* const router = require('express').Router();
-
-
-const sql = require('mssql'); //qui invece con il metodo mssql mi da credenziali errate
-const config = {
-    user: 'Read_Only_ENG_MATRYCS',
-    password: 'MATRYCS2021!',
-    server: '172.16.1.136', // You can use 'localhost\\instance' to connect to named instance, telnet 172.16.1.136 1433
-    database: 'Runtime',
-    options: {
-      encrypt: false // Use this if you're connecting to Azure SQL Database with true
-    }
-};
-
-router.post("/chart", async(req,res)=>{ 
-  try {
-    await sql.connect(config);
-    const result = await sql.query(`
-      SELECT Value
-      FROM dbo.History
-      WHERE tagName = 'min_DB_ENM_001638.Cv'
-    `);//select prende attributi/colonne,from prende la tabella,tagname prende
-     console.log(result.recordset);
-     result.recordset.forEach(element => {
-      console.log(element);
-    });
-  } catch (error) {
-    console.log(error);
-  } finally {
-    sql.close();
-    console.log('finito');
-  }
-    //console.log(req.body) //mando dal server
-  
-    return res.status(201).send(result.recordset.forEach(element => {
-      console.log(element);
-    }));
-    //console.log(req.body)
-
-})
-
-
-module.exports = router; */
-
 const router = require('express').Router();
-const sql = require('mssql');
 
-const config = {
+let powerValue = ''; // Dichiarazione globale di powerValue
+let datestart = ''; // Dichiarazione globale di datestart
+let dateend = ''; // Dichiarazione globale di dateend
+
+router.post('/api/power', async (req, res) => { //collegamento per prendere i dati di power dal front-end per utilizzarle nella query
+  try {
+    powerValue = req.body.power; // Update the variable name to "power" instead of "meter"
+  
+    // Do whatever you want with the power value
+    console.log(`Power value: ${powerValue}`);
+  
+    // Send a response to the client
+    res.json({ message: 'Power value received' });
+  } catch (error) {
+    // Handle any errors that may occur
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+});
+ 
+// Gestione della richiesta POST per la data
+router.post('/api/datetimestart', (req, res) => { //collegamento per prendere le date inizali dai DateAndTimestart  dal front-end per utilizzarle nella query
+  datestart = req.body.datestart;
+  console.log(`date start: ${datestart}`);
+  // Esegui le operazioni necessarie con la data (es. salvataggio nel database)
+  // Invia una risposta di conferma al front end
+  res.json({ message: 'Data received successfully' });
+});
+
+
+// Gestione della richiesta POST per la data
+router.post('/api/datetimeend', (req, res) => { //collegamento per prendere le date finali dai DateAndTimeend dal front-end per utilizzarle nella query
+  dateend  = req.body.dateend;
+  // Esegui le operazioni necessarie con la data (es. salvataggio nel database)
+  // Invia una risposta di conferma al front end
+  console.log(`date end: ${dateend}`);
+  res.json({ message: 'Data received successfully' });
+});
+
+
+const sql = require('mssql'); //libreria mssql
+
+const config = { //credenziali di accesso di mssql
   user: 'Read_Only_ENG_MATRYCS',
   password: 'MATRYCS2021!',
   server: '172.16.1.136',
@@ -55,85 +52,30 @@ const config = {
   }
 };
 
-router.post("/chart", async (req, res) => {
+async function executeSQLQuery(query) { //funzione generica per eseguire una query per risolvere il problema di sincronizzazione dei dati
+  await sql.connect(config);
+  const result = await sql.query(query);
+  sql.close();
+  return result.recordset;
+}
+
+router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query con i dati presi dal front-end
   try {
-    await sql.connect(config);
-    const result = await sql.query(`
+    /* console.log(`date end: ${dateend}`);
+    console.log(datestart);
+    console.log(dateend); */
+    const result = await executeSQLQuery(`
       SELECT DateTime, Value
       FROM dbo.History
-      WHERE tagName = 'min_DB_ENM_001638.Cv'
-      AND DateTime between '2022-07-01 00:00:00'
-      AND  '2022-07-01 01:00:00'
-    `);
-    console.log(result.recordset);
-
-    result.recordset.forEach(element => {
-      console.log(element);
-    });
-    const numbers = result.recordset.map(record => parseFloat(record.Value))
-    console.log(numbers);
-
+      WHERE tagName = '${powerValue}'
+      AND DateTime between '${datestart}'
+      AND  '${dateend}'
+    `);  
     sql.close();
     console.log('finito');
-
-    return res.status(201).send(numbers);
-
-    /* return res.status(201).send(result.recordset.forEach(element => {
-    })); */
+    return res.status(201).send(result);
   } catch (error) {
     console.log(error);
     return res.status(500).send('Internal Server Error');
   }
 });
-
-module.exports = router;
-
-
-
-/* async function executeQuery() {
-  try {
-    await sql.connect(config);
-    const result = await sql.query(`
-      SELECT DateTime, Value
-      FROM dbo.History
-      WHERE tagName = 'min_DB_ENM_001638.Cv'
-      AND dateTime >= '2022-07-01 00:00:00'
-      AND dateTime < '2022-08-01 00:00:00'
-    `);
-    SELECT DateTime, Value
-      FROM dbo.History
-      WHERE tagName = 'min_DB_ENM_001638.Cv'
-      AND DateTime between '2022-07-01 00:00:00'
-      AND  '2022-07-01 01:00:00'
-
-    
-    
-    console.log(result);
-  } catch (error) {
-    console.log(error);
-  } finally {
-    sql.close();
-  }
-} */
-
-/* executeQuery(); */
-
-/* router.post("/chart", async(req,res)=>{ 
-  //console.log(req.body) //mando dal server
-  let numeriCasuali = []; //per generare numeri casuali, ma non s come metterli
-        for (let i = 0; i < 10; i++) { //riempio array
-          numeriCasuali.push(Math.floor(Math.random()*90));
-        }
-  return res.status(201).send(numeriCasuali);
-  //console.log(req.body)
-
-}) */
-
-//listen for request on port 4000
-/* router.post("/numeriCasuali", (req, res) => {
-    let numeriCasuali = []; //per generare numeri casuali, ma non s come metterli
-          for (let i = 0; i < 100; i++) { //riempio array
-            numeriCasuali.push(Math.floor(Math.random()*90));
-          }
-      res.json(numeriCasuali);
-  }) */
