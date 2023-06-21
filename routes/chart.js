@@ -1,4 +1,4 @@
-const router = require('express').Router();
+/* const router = require('express').Router();
 
 let powerValue = ''; // Dichiarazione globale di powerValue
 let datestart = ''; // Dichiarazione globale di datestart
@@ -63,7 +63,7 @@ router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query 
   try {
     /* console.log(`date end: ${dateend}`);
     console.log(datestart);
-    console.log(dateend); */
+    console.log(dateend); 
     const result = await executeSQLQuery(`
       SELECT DateTime, Value
       FROM dbo.History
@@ -78,4 +78,4 @@ router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query 
     console.log(error);
     return res.status(500).send('Internal Server Error');
   }
-});
+}); */
