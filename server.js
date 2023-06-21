@@ -245,7 +245,7 @@ app.get("/api/carddetails", async (req, res) => { //qui prendo i risultati del f
 
 app.get('/api/offers', async (req, res) => {
   try {
-    //console.log('getwinni', IDRequest)
+    console.log('getwinni', IDRequest)
     const urlApi = `https://emotion-projects.eu/marketplace/offer?request=${IDRequest}`;
     //const urlApi = `https://emotion-projects.eu/marketplace/offer?request=1`;
     const response = await fetch(urlApi);
@@ -255,6 +255,9 @@ app.get('/api/offers', async (req, res) => {
     const extraValues = [];
     const IDValues = [];
     const dataToSendToFrontEnd = [];
+    console.log('ciao',dataOffer)
+    const nonEmptyOffers = dataOffer.offers.filter(offer => Object.keys(offer).length > 0);
+    console.log('empty',nonEmptyOffers);
     dataOffer.offers.forEach(offer => {
       const IDValue = offer.id;
       const author = offer.author
@@ -268,20 +271,23 @@ app.get('/api/offers', async (req, res) => {
       };
       dataToSendToFrontEnd.push(offerData)
     });
+    console.log('valori',extraValues)
     //console.log('winne', dataToSendToFrontEnd);
+    console.log('winnerID',getWinnerID(extraValues, IDValues))
+    console.log('minextravalue',getMinExtraValue(extraValues))
     res.json({
       dataOffer: dataToSendToFrontEnd,
       winnerID: getWinnerID(extraValues, IDValues),
       minExtraValue: getMinExtraValue(extraValues)
     });
-    // Second PUT request payload
+    /* // Second PUT request payload
      const secondApiPayload = {
       state: "decided",
       decision: [{"id": winnerID}],
       //decision: [{ id: 3 }]
     }; 
-
-     // Second PUT request
+ */
+    /*  // Second PUT request
     const urlApi2 = `https://emotion-projects.eu/marketplace/offer?request=${IDRequest}`;
     const secondResponse = await fetch(urlApi2, {
       method: "PUT",
@@ -291,7 +297,7 @@ app.get('/api/offers', async (req, res) => {
       body: JSON.stringify(secondApiPayload),
     });
     const responseData = await secondResponse.json();
-    console.log("Response from second PUT request:", responseData);
+    console.log("Response from second PUT request:", responseData); */
  
     // Handle the response data from the second PUT request here   
   } catch (error) {
