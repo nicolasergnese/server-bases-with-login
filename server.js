@@ -243,7 +243,7 @@ app.get("/api/carddetails", async (req, res) => { //qui prendo i risultati del f
   }
 });
 
-app.get('/api/offers', async (req, res) => {
+app.get('/api/offers', async (req, res) => { //funzione per riempire la tabella offers
   try {
     console.log('getwinni', IDRequest)
     const urlApi = `https://emotion-projects.eu/marketplace/offer?request=${IDRequest}`;
@@ -256,9 +256,10 @@ app.get('/api/offers', async (req, res) => {
     const IDValues = [];
     const dataToSendToFrontEnd = [];
     console.log('ciao',dataOffer)
-    const nonEmptyOffers = dataOffer.offers.filter(offer => Object.keys(offer).length > 0);
+    const nonEmptyOffers = dataOffer.offers.filter(offer => Object.keys(offer).length > 0);//questo filtro lo uso per levare offerte nulle che mi danno problemi per calcolare il prezzo minimo
     console.log('empty',nonEmptyOffers);
-    dataOffer.offers.forEach(offer => {
+    
+    nonEmptyOffers.forEach(offer => {//ciclo ogni offerta
       const IDValue = offer.id;
       const author = offer.author
       const extraValue = offer.extra;
@@ -280,15 +281,21 @@ app.get('/api/offers', async (req, res) => {
       winnerID: getWinnerID(extraValues, IDValues),
       minExtraValue: getMinExtraValue(extraValues)
     });
-    /* // Second PUT request payload
+    console.log(getWinnerID(extraValues, IDValues))
+
+    const value1 = "decided";
+    const value2 = [{"id": getWinnerID(extraValues, IDValues)}];
+    console.log('put',value1)
+    console.log(value2)
+     // Second PUT request payload
      const secondApiPayload = {
-      state: "decided",
-      decision: [{"id": winnerID}],
+      state: value1,
+      decision: value2,
       //decision: [{ id: 3 }]
     }; 
- */
-    /*  // Second PUT request
-    const urlApi2 = `https://emotion-projects.eu/marketplace/offer?request=${IDRequest}`;
+      // Second PUT request
+      console.log('put',IDRequest)
+    const urlApi2 = `https://emotion-projects.eu/marketplace/request/${IDRequest}`;
     const secondResponse = await fetch(urlApi2, {
       method: "PUT",
       headers: {
@@ -296,8 +303,7 @@ app.get('/api/offers', async (req, res) => {
       },
       body: JSON.stringify(secondApiPayload),
     });
-    const responseData = await secondResponse.json();
-    console.log("Response from second PUT request:", responseData); */
+    console.log("Response from second PUT request done"); 
  
     // Handle the response data from the second PUT request here   
   } catch (error) {
@@ -305,13 +311,13 @@ app.get('/api/offers', async (req, res) => {
     // Handle the error here
   }
 });
-function getWinnerID(extraValues, IDValues) {
+function getWinnerID(extraValues, IDValues) { //per prendere id vincente
   const minExtraValue = getMinExtraValue(extraValues);
   const indexMinValue = extraValues.indexOf(minExtraValue);
   return IDValues[indexMinValue];
 }
 
-function getMinExtraValue(extraValues) {
+function getMinExtraValue(extraValues) { //per prendre il prezzo minore
   return extraValues.reduce((minValue, currentValue) => {
     if (currentValue < minValue) {
       return currentValue;
