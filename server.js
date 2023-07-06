@@ -323,10 +323,99 @@ function getMinExtraValue(extraValues) { //per prendre il prezzo minore
       return currentValue;
     }
     return minValue;
-  })};
+  })}; 
 //fine codice per la pagina DSO DASHBOARD
 
+//inizio codice mqtt
+//serve per inviare messaggi al mqtt
+/* const mqtt = require('mqtt');
+const connectionMQTT = mqtt.connect('mqtt://test.mosquitto.org'); // Connessione a un broker MQTT
 
+connectionMQTT.on('connect', function () { // Evento di connessione al broker
+  connectionMQTT.subscribe('presence', function (err) { // Iscrizione al topic 'presence'
+    if (!err) {
+      connectionMQTT.publish('presence', 'Hello mqtt'); // Invio di un messaggio al topic 'presence'
+    }
+  });
+});
+
+connectionMQTT.on('message', function (topic, message) { // Gestione dei messaggi ricevuti
+  console.log(message.toString()); // Stampa il messaggio ricevuto
+  console.log("ciao"); // Stampa "ciao"
+  connectionMQTT.end(); // Chiusura della connessione al broker MQTT
+});   */
+/*//serve per ricevere messaggi di mqtt
+const mqtt = require('mqtt');
+const connectionMQTT = mqtt.connect('mqtt://test.mosquitto.org');
+
+connectionMQTT.on('connect', function () {
+  connectionMQTT.subscribe('topic_name'); // Iscrizione al topic desiderato
+});
+
+connectionMQTT.on('message', function (topic, message) {
+  // Gestione dei messaggi ricevuti
+  console.log('Messaggio ricevuto:', message.toString());
+  // Puoi fare ulteriori operazioni sui valori ricevuti qui
+}); */
+/* const datimqtt = async () => { 
+  try {
+    const response = await fetch("/get_records/<$(222)>/<sensing_service_id >/<start>/<end>", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    console.log("First API call response: done");
+    //const response = await fetch("https://emotion-projects.eu/marketplace/request")
+    //const requestIdArray = responseDataDSO.requests;
+    console.log("Response from GET request responsdataDso:", responseIDDSO);
+  } catch (error) {
+    console.error("Error during API calls:", error);
+  }
+}; */
+/* 
+const fetch = require('node-fetch');
+const Keycloak = require('keycloak-connect').Keycloak;
+
+const keycloak = new Keycloak({
+  "realm": "iot-ngin",
+  "keycloak_base_url": "http://172.16.1.9:31757",
+  "client_id": "access-control",
+  "username": "iot-ngin-user",
+  "password": "StrOngpwd!",
+  "is_legacy_endpoint": false
+});
+
+let sensor_id = ''
+let startDAteToken = ''
+let endDateToken = ''
+
+async function fetchData() {
+  const accessToken = await keycloak.accessToken.get();//metodo libreria react
+  try {
+    //urltoken = "{}/device-indexing/get_measurements/BBB6150/2023-07-03 13:55:19.988316/2023-07-04 13:55:19.988316";
+    urltoken = `{}/device-indexing/get_measurements/${sensor_id}/${startDAteToken}/${endDateToken}`
+    const response = await fetch(urltoken, {
+      headers: {
+        'Fiware-Service': 'energy', //ce li ha messi lei
+        'Fiware-ServicePath': '/', //ce li ha messi lei
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    // Verifica lo stato della risposta
+    if (response.ok) {
+      const data = await response.json();
+      // Fai qualcosa con i dati della risposta
+      console.log(data);
+    } else {
+      console.error('Errore nella richiesta:', response.status);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+fetchData();
+//fine codice mqtt */
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
