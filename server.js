@@ -7,9 +7,10 @@ const db = require("./db");
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
 
-const fetch = require('node-fetch');
 
-//const chartRoutes = require('./routes/chart');//collegamento api chart Value
+const newRoutes = require('./routes/new')
+const asmhqRoutes = require('./routes/asmhq')
+const dsoRoutes = require('./routes/dso')
 
 //database connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
@@ -25,8 +26,10 @@ app.use(cors());
 // routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use(newRoutes); //utilizzo i servizi per la pagina new, mqtt
+app.use(asmhqRoutes); //utilizzo i servizi per la pagina ASMHQ, mssql
+app.use(dsoRoutes); //utilizzo i servizi per la pagina DSO, vincitore di una request
 
-//app.use("/api/chart", chartRoutes);//collegamento api chart, non lo riesco a collegare
 
 //inizio codice per pagina ASM HQ
 let powerValue = ''; // Dichiarazione globale di powerValue

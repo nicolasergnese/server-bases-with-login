@@ -1,4 +1,7 @@
-/* const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
+
+const sql = require('mssql'); //libreria mssql
 
 let powerValue = ''; // Dichiarazione globale di powerValue
 let datestart = ''; // Dichiarazione globale di datestart
@@ -7,10 +10,8 @@ let dateend = ''; // Dichiarazione globale di dateend
 router.post('/api/power', async (req, res) => { //collegamento per prendere i dati di power dal front-end per utilizzarle nella query
   try {
     powerValue = req.body.power; // Update the variable name to "power" instead of "meter"
-  
     // Do whatever you want with the power value
     console.log(`Power value: ${powerValue}`);
-  
     // Send a response to the client
     res.json({ message: 'Power value received' });
   } catch (error) {
@@ -19,7 +20,7 @@ router.post('/api/power', async (req, res) => { //collegamento per prendere i da
     res.status(500).json({ message: 'An error occurred' });
   }
 });
- 
+
 // Gestione della richiesta POST per la data
 router.post('/api/datetimestart', (req, res) => { //collegamento per prendere le date inizali dai DateAndTimestart  dal front-end per utilizzarle nella query
   datestart = req.body.datestart;
@@ -32,15 +33,13 @@ router.post('/api/datetimestart', (req, res) => { //collegamento per prendere le
 
 // Gestione della richiesta POST per la data
 router.post('/api/datetimeend', (req, res) => { //collegamento per prendere le date finali dai DateAndTimeend dal front-end per utilizzarle nella query
-  dateend  = req.body.dateend;
+  dateend = req.body.dateend;
   // Esegui le operazioni necessarie con la data (es. salvataggio nel database)
   // Invia una risposta di conferma al front end
   console.log(`date end: ${dateend}`);
   res.json({ message: 'Data received successfully' });
 });
 
-
-const sql = require('mssql'); //libreria mssql
 
 const config = { //credenziali di accesso di mssql
   user: 'Read_Only_ENG_MATRYCS',
@@ -61,16 +60,16 @@ async function executeSQLQuery(query) { //funzione generica per eseguire una que
 
 router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query con i dati presi dal front-end
   try {
-    /* console.log(`date end: ${dateend}`);
+    console.log(`date end: ${dateend}`);
     console.log(datestart);
-    console.log(dateend); 
+    console.log(dateend);
     const result = await executeSQLQuery(`
-      SELECT DateTime, Value
-      FROM dbo.History
-      WHERE tagName = '${powerValue}'
-      AND DateTime between '${datestart}'
-      AND  '${dateend}'
-    `);  
+    EXEC [dbo].[SP_RECUPERA_DATI_STORICI_ENERGIA] 
+        @TAGNAME = '${powerValue}' ,
+        @DATA_INIZIO = '${datestart}' ,
+        @DATA_FINE = '${dateend}'
+    `);
+    console.log(result)
     sql.close();
     console.log('finito');
     return res.status(201).send(result);
@@ -78,4 +77,7 @@ router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query 
     console.log(error);
     return res.status(500).send('Internal Server Error');
   }
-}); */
+});
+
+
+module.exports = router;
