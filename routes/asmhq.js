@@ -7,11 +7,15 @@ let powerValue = ''; // Dichiarazione globale di powerValue
 let datestart = ''; // Dichiarazione globale di datestart
 let dateend = ''; // Dichiarazione globale di dateend
 
-router.post('/api/power', async (req, res) => { //collegamento per prendere i dati di power dal front-end per utilizzarle nella query
+router.post('/api/powerDateStartAndDateEnd', async (req, res) => { //collegamento per prendere i dati di power dal front-end per utilizzarle nella query
   try {
     powerValue = req.body.power; // Update the variable name to "power" instead of "meter"
+    datestart = req.body.formattedDateStart;
+    dateend = req.body.formattedDateEnd;
     // Do whatever you want with the power value
     console.log(`Power value: ${powerValue}`);
+    console.log(`date start: ${datestart}`);
+    console.log(`date end: ${dateend}`);
     // Send a response to the client
     res.json({ message: 'Power value received' });
   } catch (error) {
@@ -20,26 +24,6 @@ router.post('/api/power', async (req, res) => { //collegamento per prendere i da
     res.status(500).json({ message: 'An error occurred' });
   }
 });
-
-// Gestione della richiesta POST per la data
-router.post('/api/datetimestart', (req, res) => { //collegamento per prendere le date inizali dai DateAndTimestart  dal front-end per utilizzarle nella query
-  datestart = req.body.datestart;
-  console.log(`date start: ${datestart}`);
-  // Esegui le operazioni necessarie con la data (es. salvataggio nel database)
-  // Invia una risposta di conferma al front end
-  res.json({ message: 'Data received successfully' });
-});
-
-
-// Gestione della richiesta POST per la data
-router.post('/api/datetimeend', (req, res) => { //collegamento per prendere le date finali dai DateAndTimeend dal front-end per utilizzarle nella query
-  dateend = req.body.dateend;
-  // Esegui le operazioni necessarie con la data (es. salvataggio nel database)
-  // Invia una risposta di conferma al front end
-  console.log(`date end: ${dateend}`);
-  res.json({ message: 'Data received successfully' });
-});
-
 
 const config = { //credenziali di accesso di mssql
   user: 'Read_Only_ENG_MATRYCS',
