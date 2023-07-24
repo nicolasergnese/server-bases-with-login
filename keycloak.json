@@ -1,0 +1,8 @@
+{
+  "realm": "iot-ngin",
+  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsE+0TZ9JBdp+/wrum9WQpwlcdx+fgQ1/hBZeF0/aavYNH9H6rNt84qbqPAM290lMCZrMALQAil6OwUMQbRSbw2Y1QS6E851j0FR7c+01cnUC6qkSK2tuvy2SbTkIWXGBUKBsAK4tqRQSq00F6cnsJSl9btkOs0bHQttIr3WKdrdrVp4Dtyz4PnMxIBEQebtS1dXmZlsxNmo0DP17SCr9ltZcv6WcCGdDC7aPREqaVAS1rzYRK9cviYrRPBEk3t5+CBh5BNkNUYm4nY+uDzFFRQxURODErFa3Ersywc/MqjPJ2yV30W7Oxv6bVnu+7PnLomxTLp/XQxadKoGJdns2rQIDAQAB",
+  "auth-server-url": "http://172.16.1.9:31757",
+  "ssl-required": "none",
+  "resource": "access-control",
+  "public-client": false
+}
