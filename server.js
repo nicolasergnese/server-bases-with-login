@@ -31,6 +31,156 @@ app.use(asmhqRoutes); //utilizzo i servizi per la pagina ASMHQ, mssql
 app.use(dsoRoutes); //utilizzo i servizi per la pagina DSO, vincitore di una request
 
 
+// index.js
+const fetch = require('node-fetch');
+
+//inizio codice per pagina NEW
+let sensorIdValue = ''; // Dichiarazione globale di sensor
+let serviceIdValue = ''; // Dichiarazione globale di sensor
+let dateStartNew = ''; // Dichiarazione globale di datestart
+let dateEndNew = ''; // Dichiarazione globale di dateend
+
+
+app.post('/api/sensorIdServiceIdDateStartAndDateend', async (req, res) => { //collegamento per prendere i dati di power dal front-end per utilizzarle nella query
+    try {
+        sensorIdValue= req.body.sensor; // Update the variable name to "power" instead of "meter"
+        serviceIdValue = req.body.serviceId;
+        dateStartNew = req.body.formattedDateStart;
+        dateEndNew = req.body.formattedDateEnd;
+        // Do whatever you want with the power value
+        console.log(`Power value: ${sensorIdValue}`);
+        console.log(`Power value: ${serviceIdValue}`);
+        console.log(`Power value: ${dateStartNew}`);
+        console.log(`Power value: ${dateEndNew}`);
+        // Send a response to the client
+        res.json({ message: 'Power value received' });
+        getDataFromProtectedAPI();
+    } catch (error) {
+        // Handle any errors that may occur
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred' });
+    }
+});
+
+// Configura le credenziali client fornite da Keycloak
+const keycloakClientCredentials = {
+  clientId: 'access-control',
+  clientSecret: 'C67e5kVTzVzQbWEGn1CD6faPPw4x7o0K',
+  tokenUrl: 'http://172.16.1.9:31757/realms/iot-ngin/protocol/openid-connect/token',
+};
+
+
+// Funzione per ottenere un token di accesso utilizzando le credenziali client
+const getAccessToken = async () => {
+  try {
+    const response = await fetch(keycloakClientCredentials.tokenUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `grant_type=client_credentials&client_id=${keycloakClientCredentials.clientId}&client_secret=${keycloakClientCredentials.clientSecret}`,
+    });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.log('Error response from Keycloak:', errorResponse);
+      throw new Error('Failed to obtain access token');
+    }
+    const data = await response.json();
+    console.log('Access token:', data.access_token);
+    return data.access_token;
+  } catch (error) {
+    console.error('Error in getAccessToken:', error);
+    throw error;
+  }
+};
+
+// Esempio di utilizzo per ottenere dati dall'API protetta
+const getDataFromProtectedAPI = async () => {
+  try {
+    const accessToken = await getAccessToken();
+    console.log(' 2 Access token:', accessToken);
+    const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_measurements/BBB6150/1/${datestart}/${dateEndNew}'
+    console.log(apiUrl)
+    //const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_measurements/BBB6150/1/2023-07-21 13:55:19.988316/2023-07-24 13:55:19.988316'
+    ; // Sostituisci con l'URL dell'API protetta
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Fiware-Service': 'energy',
+        'Fiware-ServicePath': '/',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await response.json();
+    console.log(data); // Dati ricevuti dall'API
+  } catch (error) {
+    console.error(error);
+  }
+};
+/* app.get('/data', async (req, res) => {
+  try {
+    const accessToken = await getAccessToken();
+    console.log('Access token:', accessToken);
+    // Costruisci l'URL dell'API con i parametri della data
+    const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/BBB6150/1/${datestart}/${dateEndNew}`;
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Fiware-Service': 'energy',
+        'Fiware-ServicePath': '/',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await response.json();
+    console.log(data); // Dati ricevuti dall'API
+    res.json(data); // Invia la risposta JSON all'applicazione client
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch data from the API' });
+  }
+}); */
+
+// Esegui la funzione per ottenere i dati dall'API protetta
+//getDataFromProtectedAPI();
+
+
+
+/* // server.js
+const express = require('express');
+const { OIDC } = require('oidc-context');
+
+// Configurazione di oidc-context
+const oidcConfig = {
+  client_id: 'your_client_id',
+  client_secret: 'your_client_secret',
+  discovery_url: 'https://your-keycloak-url/auth/realms/iot-ngin',
+  redirect_uri: 'http://localhost:8080/callback',
+  post_logout_redirect_uri: 'http://localhost:8080',
+  scope: 'openid profile', // Puoi specificare le scope necessarie
+};
+
+const oidc = new OIDC(oidcConfig);
+
+// Endpoint per l'autenticazione tramite Keycloak
+app.get('/login', oidc.login());
+
+// Callback dopo l'autenticazione riuscita
+app.get('/callback', oidc.callback(), (req, res) => {
+  // Una volta autenticati, l'utente sarà reindirizzato a questa callback
+  // Puoi accedere ai dati utente tramite req.user
+  res.send('Autenticazione riuscita!');
+});
+
+// Endpoint per il logout
+app.get('/logout', oidc.logout());
+
+// Endpoint protetto da autenticazione
+app.get('/api/protected', oidc.protect(), (req, res) => {
+  // Questa route è protetta, quindi solo gli utenti autenticati possono accedervi
+  // Puoi accedere ai dati utente tramite req.user
+  res.json({ message: 'Questa è un\'API protetta!' });
+}); */
+
+
+/* 
 const Keycloak = require('keycloak-connect');
 const session = require('express-session');
 const axios = require('axios'); // Importa il modulo axios
@@ -62,7 +212,7 @@ app.use(keycloak.middleware({
 // A protected URL that requires authentication
 app.get('/protectedresource', keycloak.protect(), async function (req, res) {
   console.log('accesso al servizio')
-  try {
+   try {
     console.log('accesso al servizio')
     // Esempio: Fare una richiesta GET a un'API esterna per ottenere un JSON
     const response = await axios.get('https://api.example.com/data');
@@ -75,8 +225,8 @@ app.get('/protectedresource', keycloak.protect(), async function (req, res) {
   } catch (error) {
     console.error('Errore nella richiesta API:', error);
     res.status(500).send('Errore nella richiesta API');
-  }
-});
+  } 
+}); */
 
 /* const Keycloak = require('keycloak-connect');
 const session = require('express-session');
