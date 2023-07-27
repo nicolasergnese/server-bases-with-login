@@ -102,23 +102,13 @@ const getDataFromProtectedAPI = async () => {
   try {
     const accessToken = await getAccessToken();
     console.log(' 2 Access token:', accessToken);
-    //const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${dateStartNew}/${dateEndNew}`;
-    //const apiUrl = `http://172.16.1.9:31000/get_measurements/${sensorIdValue}/${serviceIdValue}/${dateStartNew}/${dateEndNew}`;
-    //const apiUrl = `http://172.16.1.9:31000/get_measurements/BBB6154/1/${onTimestart}/${onTimeend}`;
-    //const apiUrl = `http://172.16.1.9:31000/get_measurements/BBB6154/1/${formattedStart}/${formattedEnd}`;
-    //const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_measurements/BBB6152/1/${datestart}/${dateEndNew}'
-    //const apiUrl = 'http://172.16.1.9:31000/get_measurements/BBB6154/1/${stringaData}/2023-07-21 23:38:30.441841'
-    //const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_measurements/BBB6154/1/2023-07-21 22:48:08.556621/2023-07-21 23:38:30.441841'
-    console.log(`sensor id : ${sensorIdValue}`);
-    console.log(`ervice id: ${serviceIdValue}`);
-    console.log(`date start: ${dateStartNew}`);
-    console.log(`date end: ${dateEndNew}`); 
     const startDate = '2023-07-21 22:48:08.556621';
 const endDate = '2023-07-21 23:38:30.441841';
-const encodedStartDate = encodeURIComponent(startDate);
-const encodedEndDate = encodeURIComponent(endDate);
+//const encodedStartDate = encodeURIComponent(startDate);
+//const encodedEndDate = encodeURIComponent(endDate);
 
 const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/BBB6154/1/${startDate}/${endDate}`;
+//const apiUrl = `http://172.16.1.9:31000/get_measurements/BBB6154/1/${startDate}/${endDate}`; //con questo url mi fornisce i dati, ma non utilizzo il token
 console.log("apiurl", apiUrl)
     //const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_measurements/BBB6152/1/${datestart}/${dateEndNew}'
     // Sostituisci con l'URL dell'API protetta
