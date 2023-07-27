@@ -22,6 +22,7 @@
     "joi-password-complexity": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "keycloak-connect": "^22.0.1",
+    "keycloak-js": "^22.0.1",
     "mongoose": "^6.7.2",
     "mqtt": "^4.3.7",
     "mssql": "^9.1.1",

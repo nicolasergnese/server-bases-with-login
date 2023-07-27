@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-
 const fetch = require('node-fetch');
-//const Keycloak = require('keycloak-connect').Keycloak;
 
 //inizio codice per pagina NEW
 let sensorIdValue = ''; // Dichiarazione globale di sensor
@@ -11,128 +8,88 @@ let serviceIdValue = ''; // Dichiarazione globale di sensor
 let dateStartNew = ''; // Dichiarazione globale di datestart
 let dateEndNew = ''; // Dichiarazione globale di dateend
 
-
 router.post('/api/sensorIdServiceIdDateStartAndDateend', async (req, res) => { //collegamento per prendere i dati di power dal front-end per utilizzarle nella query
-    try {
-        sensorIdValue= req.body.sensor; // Update the variable name to "power" instead of "meter"
-        serviceIdValue = req.body.serviceId;
-        dateStartNew = req.body.formattedDateStart;
-        dateEndNew = req.body.formattedDateEnd;
-        // Do whatever you want with the power value
-      /*   console.log(`Power value: ${sensorIdValue}`);
-        console.log(`Power value: ${serviceIdValue}`);
-        console.log(`Power value: ${dateStartNew}`);
-        console.log(`Power value: ${dateEndNew}`); */
-        // Send a response to the client
-        res.json({ message: 'Power value received' });
-    } catch (error) {
-        // Handle any errors that may occur
-        console.error(error);
-        res.status(500).json({ message: 'An error occurred' });
-    }
-});
-/* 
-const keycloakConfig = require('./keycloak.json');
-const keycloak = require('keycloak-connect')(keycloakConfig);
-
-keycloak.init({ config: keycloakConfig });
-
-app.get("/api/chartDateTimeNew", keycloak.protect(), async (req, res) => {
   try {
-    const accessToken = await keycloak.accessToken.get();
-    console.log(`sensor id: ${sensorIdValue}`);
-    console.log(`service id: ${serviceIdValue}`);
-    console.log(`start date: ${dateStartNew}`);
-    console.log(`end date: ${dateEndNew}`);
-    const urltoken = `/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${dateStartNew}/${dateEndNew}`;
-    const response = await fetch(urltoken, {
+    sensorIdValue = req.body.sensor; // Update the variable name to "power" instead of "meter"
+    serviceIdValue = req.body.serviceId;
+    dateStartNew = req.body.formattedDateStart;
+    dateEndNew = req.body.formattedDateEnd;
+    // Do whatever you want with the power value
+    console.log(`sensor id : ${sensorIdValue}`);
+    console.log(`ervice id: ${serviceIdValue}`);
+    console.log(`date start: ${dateStartNew}`);
+    console.log(`date end: ${dateEndNew}`);
+    // Send a response to the client
+    res.json({ message: 'Power value received' });
+    //getDataFromProtectedAPI();
+  } catch (error) {
+    // Handle any errors that may occur
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+});
+// Configura le credenziali client fornite da Keycloak
+const keycloakClientCredentials = {
+  clientId: 'access-control',
+  clientSecret: 'C67e5kVTzVzQbWEGn1CD6faPPw4x7o0K',
+  tokenUrl: 'http://172.16.1.9:31757/realms/iot-ngin/protocol/openid-connect/token',
+};
+// Funzione per ottenere un token di accesso utilizzando le credenziali client
+const getAccessToken = async () => {
+  try {
+    const response = await fetch(keycloakClientCredentials.tokenUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `grant_type=client_credentials&client_id=${keycloakClientCredentials.clientId}&client_secret=${keycloakClientCredentials.clientSecret}`,
+    });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.log('Error response from Keycloak:', errorResponse);
+      throw new Error('Failed to obtain access token');
+    }
+    const data = await response.json();
+    console.log('Access token:', data.access_token);
+    return data.access_token;
+  } catch (error) {
+    console.error('Error in getAccessToken:', error);
+    throw error;
+  }
+};
+
+const { format, parseISO } = require('date-fns');
+
+router.get("/api/chartDateTimeNewEnergiot", async (req, res) => { //esecuzione della query con i dati presi dal front-end
+  try {
+    const accessToken = await getAccessToken();
+    console.log(' 2 Access token:', accessToken);
+    // Formattare le date nel formato desiderato
+    const dateStart = parseISO(dateStartNew);
+    const dateEnd = parseISO(dateEndNew);
+    const formattedStart = format(dateStart, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
+    const formattedEnd = format(dateEnd, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
+    console.log("Formatted Start:", formattedStart);
+    console.log("Formatted End:", formattedEnd);
+    const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${formattedStart}/${formattedEnd}`;
+    console.log("apiurl", apiUrl)
+    console.log(`sensor id : ${sensorIdValue}`);
+    console.log(`ervice id: ${serviceIdValue}`);
+    console.log(`date start: ${formattedStart}`);
+    console.log(`date end: ${formattedEnd}`);
+    const response = await fetch(apiUrl, {
       headers: {
         'Fiware-Service': 'energy',
         'Fiware-ServicePath': '/',
-        Authorization: `Bearer ${accessToken}`
-      }
+        'token': accessToken, //tipi di token, io usavo authotìrized
+      },
     });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-    } else {
-      console.error('Errore nella richiesta:', response.status);
-    }
+    const data = await response.json();
+    console.log(data); // Dati ricevuti dall'API
+    return res.status(201).send(data);
   } catch (error) {
     console.error(error);
   }
 });
- */
-
-/* const keycloakConfig = require('./keycloak.json');
-const keycloak = require('keycloak-connect')(keycloakConfig);
-
-keycloak.init({ config: keycloakConfig });
-
-app.get("/api/chartDateTimeNew", keycloak.protect(), async (req, res) => {
-  try {
-    const accessToken = await keycloak.accessToken.get();
-    console.log(`sensor id: ${sensorIdValue}`);
-    console.log(`service id: ${serviceIdValue}`);
-    console.log(`start date: ${dateStartNew}`);
-    console.log(`end date: ${dateEndNew}`);
-    const urltoken = `/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${dateStartNew}/${dateEndNew}`;
-    const response = await fetch(urltoken, {
-      headers: {
-        'Fiware-Service': 'energy',
-        'Fiware-ServicePath': '/',
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-    } else {
-      console.error('Errore nella richiesta:', response.status);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}); */
-
- 
-/* const keycloak = require('keycloak-connect')({
-  "realm": "iot-ngin",
-  "keycloak_base_url": "http://172.16.1.9:31757",
-  "client_id": "access-control",
-  "username": "iot-ngin-user",
-  "password": "StrOngpwd!",
-  "is_legacy_endpoint": false
-});
-
-app.get("/api/chartDateTimeNew",keycloak.protect(), async (req, res) => { //esecuzione della query con i dati presi dal front-end
-  const accessToken = await keycloak.accessToken.get();//metodo libreria react
-  try {
-    console.log(`sensor id: ${sensorIdValue}`);
-        console.log(`service id: ${serviceIdValue}`);
-        console.log(`start date: ${dateStartNew}`);
-        console.log(`end date: ${dateEndNew}`);
-    //urltoken = "{}/device-indexing/get_measurements/BBB6150/2023-07-03 13:55:19.988316/2023-07-04 13:55:19.988316";
-    urltoken = `/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${dateStartNew}/${dateEndNew}`
-    //urltoken = `{}/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${dateStartNew}/${dateEndNew}`
-    const response = await fetch(urltoken, {
-      headers: {
-        'Fiware-Service': 'energy', //ce li ha messi lei
-        'Fiware-ServicePath': '/', //ce li ha messi lei
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-    // Verifica lo stato della risposta
-    if (response.ok) {
-      const data = await response.json();
-      // Fai qualcosa con i dati della risposta
-      console.log(data);
-    } else {
-      console.error('Errore nella richiesta:', response.status);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}); */
 
 module.exports = router;
