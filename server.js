@@ -31,6 +31,32 @@ app.use(asmhqRoutes); //utilizzo i servizi per la pagina ASMHQ, mssql
 app.use(dsoRoutes); //utilizzo i servizi per la pagina DSO, vincitore di una request
 
 
+const axios = require('axios');
+
+const getAccessToken = async () => {
+  const authservice_session = 'MTY5MTA1OTAyMXxOd3dBTkZWWFMwNWFWVXBKV2xkUVdrWlRUa2xUV1RORVYxQlVXRlJIUlVZMVRGSllSMWxVUVRWU1NGcE5NazFITlZkQ1NVSlNSRUU9fJC6PJfrENFhTOJzrekm8ulR0Zsi158ITqtxaVN31F5Q'; // Assicurati di sostituire 'YOUR_AUTH_SESSION_TOKEN' con il token effettivo
+  url = 'http://ol-smart-grid-power-consumption.jmira.kserve.kf.iot-ngin.onelab.eu/v1/models/ol-smart-grid-power-consumption:predict'
+  const headers = {
+    'Content-Type': 'application/json',
+    'Cookie': 'authservice_session=' + authservice_session,
+  };
+  const payload = {
+    "service": "power-generation"
+  };
+  // Effettua la richiesta POST all'API
+  axios.post(url, payload, { headers })
+    .then(response => {
+      console.log('Risposta:', response.data);
+    })
+    .catch(error => {
+      console.error('Errore:', error.message);
+    });
+};
+getAccessToken();
+
+
+
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 
