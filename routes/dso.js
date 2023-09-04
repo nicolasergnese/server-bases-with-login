@@ -68,9 +68,10 @@ const sendDataEndExtraRequestIdToBackend = async (dateendDSO, datestartDSO, ener
     }
 };
 
+let datestartDSO = '';
 router.post("/api/dataenergyvalue", async (req, res) => {//qui prendo i valori di energia, e delle date di inizio e fine
     const dateendDSO = req.body.dateend;
-    const datestartDSO = req.body.datestart;
+    datestartDSO = req.body.datestart;
     const energyValueDSO = req.body.energyvalue;
     try {
         await sendDataEndExtraRequestIdToBackend(dateendDSO, datestartDSO, energyValueDSO, id); //prendendo i dati della request, applico la funzione sopra
@@ -115,6 +116,7 @@ router.post("/api/IDRequestForOffers", async (req, res) => {//qui prendo i valor
     }
 });
 
+let deadline = '';
 router.get("/api/carddetails", async (req, res) => { //qui prendo i risultati del fetch e li mando al front-end per la tabella request
     try {
         console.log('IDREQUEST:', IDRequest)
@@ -123,7 +125,7 @@ router.get("/api/carddetails", async (req, res) => { //qui prendo i risultati de
         const responseCardDSO = await responseCard.json();
         console.log("The result card is:", responseCardDSO);
         // Accedi direttamente alla data di scadenza
-        const deadline = responseCardDSO.deadline;
+        deadline = responseCardDSO.deadline;
         console.log("deadline:", deadline);
         return res.status(201).send(responseCardDSO);
     } catch (error) {
@@ -132,6 +134,11 @@ router.get("/api/carddetails", async (req, res) => { //qui prendo i risultati de
     }
 });
 
+
+let {format} = require('date-fns');
+const oggi = new Date(); // Ottieni la data odierna a mezzanotte
+const formattedToday = format(oggi, 'yyyy-MM-dd HH:mm:ss');
+console.log(formattedToday);
 router.get('/api/offers', async (req, res) => { //funzione per riempire la tabella offers
     try {
         console.log('getwinni', IDRequest)
@@ -181,6 +188,9 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
             //decision: [{ id: 3 }]
         };
         // Second PUT request
+        console.log('if deadline', deadline )
+        console.log('if formatted today', formattedToday )
+        if(deadline>=formattedToday) {
         console.log('put', IDRequest)
         const urlApi2 = `https://emotion-projects.eu/marketplace/request/${IDRequest}`;
         const secondResponse = await fetch(urlApi2, {
@@ -191,7 +201,11 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
             body: JSON.stringify(secondApiPayload),
         });
         console.log("Response from second PUT request done");
-        // Handle the response data from the second PUT request here   
+        // Handle the response data from the second PUT request here  
+    } 
+    else {
+        console.log('deadline scaduta')
+    }
     } catch (error) {
         console.error("Error:", error);
         // Handle the error here
