@@ -122,9 +122,10 @@ router.get("/api/carddetails", async (req, res) => { //qui prendo i risultati de
         const responseCard = await fetch(urlApiCard);
         const responseCardDSO = await responseCard.json();
         console.log("The result card is:", responseCardDSO);
-
+        // Accedi direttamente alla data di scadenza
+        const deadline = responseCardDSO.deadline;
+        console.log("deadline:", deadline);
         return res.status(201).send(responseCardDSO);
-
     } catch (error) {
         console.log(error);
         return res.status(500).send("Internal Server Error");
@@ -139,7 +140,7 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
         const response = await fetch(urlApi);
         //console.log('apiOffers', response)
         const dataOffer = await response.json();
-        //console.log('apiOffers', dataOffer)
+        console.log('apiOffers', dataOffer)
         const extraValues = [];
         const IDValues = [];
         const dataToSendToFrontEnd = [];

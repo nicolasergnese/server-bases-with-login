@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 
 router.get("/api/chartDateTimeForecasted", async (req, res) => {
     try {
-        const authservice_session = 'MTY5Mjc4NDI4N3xOd3dBTkVJeVZGcFVWMEpWVHpaRFYwUlFUa016UzB4Sk4xcFVXRFJHVGtFMlEwSlVVRVpSV2t4SVVGWlBXbGhZUlVoQlFsVlBORUU9fOjKSvMSI2f8Qa9W-nbkcyRGvFUG6ORKy5yHoGiycqBv';
+        const authservice_session = 'MTY5MzIxODU1OHxOd3dBTkVSU1ZFMU1ORXBOTjA5TE5ESklRMHBPVTBKSFIwazNSRVZIVUZwR1RreGFXa2hQU2tGR1JFRk5VMFJKUVRSUVJrcERNMEU9fAnVRXZz540UQ2UJpEIkwn0Pi-VH5QAfkbSPwgzIdzqd';
         const url = 'http://ol-smart-grid-power-consumption.jmira.kserve.kf.iot-ngin.onelab.eu/v1/models/ol-smart-grid-power-consumption:predict';
         const headers = {
             'Content-Type': 'application/json',
