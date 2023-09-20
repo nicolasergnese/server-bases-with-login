@@ -204,7 +204,7 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
         // Handle the response data from the second PUT request here  
     } 
     else {
-        console.log('deadline scaduta')
+        console.log('deadline non ancora scaduta')
     }
     } catch (error) {
         console.error("Error:", error);
