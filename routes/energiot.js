@@ -37,20 +37,8 @@ router.get("/api/chartDateTimeEnergiot", async (req, res) => { //esecuzione dell
     try {
       const accessToken = await getAccessToken();
       console.log(' 2 Access token:', accessToken);
-      // Formattare le date nel formato desiderato
-     /*  const dateStart = parseISO(dateStartNew);
-      const dateEnd = parseISO(dateEndNew);
-      const formattedStart = format(dateStart, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
-      const formattedEnd = format(dateEnd, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
-      console.log("Formatted Start:", formattedStart);
-      console.log("Formatted End:", formattedEnd); */
-      //const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${formattedStart}/${formattedEnd}`;
       const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_last_n_records/ASM03000006?last_n=144' 
       console.log("apiurl", apiUrl)
-      /* console.log(`sensor id : ${sensorIdValue}`);
-      console.log(`ervice id: ${serviceIdValue}`);
-      console.log(`date start: ${formattedStart}`);
-      console.log(`date end: ${formattedEnd}`); */
       const response = await fetch(apiUrl, {
         headers: {
           'Fiware-Service': 'energy',
@@ -65,67 +53,6 @@ router.get("/api/chartDateTimeEnergiot", async (req, res) => { //esecuzione dell
       console.error(error);
     }
   });
-
-  /*   const { format, parseISO } = require('date-fns');
-  
-  router.get("/api/chartDateTimeNewEnergiot", async (req, res) => { //esecuzione della query con i dati presi dal front-end
-    try {
-      const accessToken = await getAccessToken();
-      console.log(' 2 Access token:', accessToken);
-      // Formattare le date nel formato desiderato
-      const dateStart = parseISO(dateStartNew);
-      const dateEnd = parseISO(dateEndNew);
-      const formattedStart = format(dateStart, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
-      const formattedEnd = format(dateEnd, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
-      console.log("Formatted Start:", formattedStart);
-      console.log("Formatted End:", formattedEnd);
-      const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${formattedStart}/${formattedEnd}`;
-      console.log("apiurl", apiUrl)
-      console.log(`sensor id : ${sensorIdValue}`);
-      console.log(`ervice id: ${serviceIdValue}`);
-      console.log(`date start: ${formattedStart}`);
-      console.log(`date end: ${formattedEnd}`);
-      const response = await fetch(apiUrl, {
-        headers: {
-          'Fiware-Service': 'energy',
-          'Fiware-ServicePath': '/',
-          'token': accessToken, //tipi di token, io usavo authotìrized
-        },
-      });
-      const data = await response.json();
-      console.log(data); // Dati ricevuti dall'API
-      return res.status(201).send(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }); */
-
-/* router.get("/api/chartDateTimeForecasted", async (req, res) => {
-    try {
-        const authservice_session = 'MTY5MzIxODU1OHxOd3dBTkVSU1ZFMU1ORXBOTjA5TE5ESklRMHBPVTBKSFIwazNSRVZIVUZwR1RreGFXa2hQU2tGR1JFRk5VMFJKUVRSUVJrcERNMEU9fAnVRXZz540UQ2UJpEIkwn0Pi-VH5QAfkbSPwgzIdzqd';
-        const url = 'http://ol-smart-grid-power-consumption.jmira.kserve.kf.iot-ngin.onelab.eu/v1/models/ol-smart-grid-power-consumption:predict';
-        const headers = {
-            'Content-Type': 'application/json',
-            'Cookie': 'authservice_session=' + authservice_session,
-        };
-        const payload = {
-            "service": "power-generation"
-        };
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        console.log('Risposta:', data);
-        return res.status(201).send(data);
-    } catch (error) {
-        console.error(error);
-    }
-}); */
 
 
 module.exports = router;
