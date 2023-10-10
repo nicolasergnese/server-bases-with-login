@@ -30,7 +30,7 @@ router.get("/api/chartDateTimeHome", async (req, res) => {
                 'Accept-Encoding': 'gzip, deflate',
                 'Connection': 'keep-alive',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Cookie': 'authservice_session=MTY5NTc0MzI2MXxOd3dBTkRkV05VSmFRa05EVWtGSU5WcFZXRGN6VDBOSVJFRXpORkEwTkU5RldWbElSREpKUWxOR1VVazNRakpaVmxkSU56VlZTVkU9fEe6hTw-VznCFI_FPtWwM96qbvQd1xKM43Pcb9bKaXHV',
+                'Cookie': 'authservice_session=MTY5NTg5MDE2M3xOd3dBTkVOQlNVTXpSVFEzUmxSSFVVUlJTelZTV0VJelMwMHpOa1F5UTFJelEwUldOMVZLTWtvMVMwUkNRa3d6VVVOTVEweGFVMUU9fEAar8714IY-zaaiUpRODIkgbuYMAy2mGq5txBgSIL2J',
                 'User-Agent': 'python-requests/2.22.0'
             },
             body: JSON.stringify(requestData)
@@ -61,7 +61,7 @@ router.get("/api/chartDateTimeHome2", async (req, res) => {
                 'Accept-Encoding': 'gzip, deflate',
                 'Connection': 'keep-alive',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Cookie': 'authservice_session=MTY5NTc0MzI2MXxOd3dBTkRkV05VSmFRa05EVWtGSU5WcFZXRGN6VDBOSVJFRXpORkEwTkU5RldWbElSREpKUWxOR1VVazNRakpaVmxkSU56VlZTVkU9fEe6hTw-VznCFI_FPtWwM96qbvQd1xKM43Pcb9bKaXHV',
+                'Cookie': 'authservice_session=MTY5NTg5MDE2M3xOd3dBTkVOQlNVTXpSVFEzUmxSSFVVUlJTelZTV0VJelMwMHpOa1F5UTFJelEwUldOMVZLTWtvMVMwUkNRa3d6VVVOTVEweGFVMUU9fEAar8714IY-zaaiUpRODIkgbuYMAy2mGq5txBgSIL2J',
                 'User-Agent': 'python-requests/2.22.0'
             },
             body: JSON.stringify(requestData2)
