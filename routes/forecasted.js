@@ -84,9 +84,9 @@ router.get("/api/chartDateTimeForecasted", async (req, res) => {
         });
 
         const data = await response.json();
-
-        console.log('Risposta:', data);
-        return res.status(201).send(data);
+        //console.log('Risposta:', data);
+        console.log('ris 2:', data.predictions.value)
+        return res.status(201).send(data.predictions.value);
 
     }
     } catch (error) {
