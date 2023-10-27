@@ -8,7 +8,7 @@ let numberStep = 0;
 router.post("/api/numberStep", async (req, res) => {
     try {
         numberStep = req.body.numberStep;
-        console.log(numberStep)
+        //console.log(numberStep)
         res.json({ message: 'Power value received' });
     } catch (error) {
         console.error(error);
@@ -35,13 +35,13 @@ router.get("/api/chartDateTimeHome", async (req, res) => {
             },
             body: JSON.stringify(requestData)
         };
-        console.log(requestData.number_steps);
-        console.log(requestData.state_index);
+        //console.log(requestData.number_steps);
+        //console.log(requestData.state_index);
         const response = await fetch(apiUrl, requestOptions);
         const data = await response.json();
-        console.log('Response data:', data);
+        //console.log('Response data:', data);
         const kpis = data.state_requested.kpis
-        console.log(kpis)
+        //console.log(kpis)
         return res.status(201).send(kpis);
     } catch (error) {
         console.error(error);
@@ -66,13 +66,13 @@ router.get("/api/chartDateTimeHome2", async (req, res) => {
             },
             body: JSON.stringify(requestData2)
         };
-        console.log(requestData2.number_steps);
-        console.log(requestData2.state_index);
+        //console.log(requestData2.number_steps);
+        //console.log(requestData2.state_index);
         const response = await fetch(apiUrl, requestOptions2);
         const data = await response.json();
-        console.log('Response data 2:', data);
+        //console.log('Response data 2:', data);
         const kpis2 = data.state_requested.kpis
-        console.log(kpis2)
+        //console.log(kpis2)
         return res.status(201).send(kpis2);
     } catch (error) {
         console.error(error);

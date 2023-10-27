@@ -13,9 +13,9 @@ router.post('/api/powerDateStartAndDateEnd', async (req, res) => { //collegament
     datestart = req.body.formattedDateStart;
     dateend = req.body.formattedDateEnd;
     // Do whatever you want with the power value
-    console.log(`Power value: ${powerValue}`);
-    console.log(`date start: ${datestart}`);
-    console.log(`date end: ${dateend}`);
+    //console.log(`Power value: ${powerValue}`);
+    //console.log(`date start: ${datestart}`);
+    //console.log(`date end: ${dateend}`);
     // Send a response to the client
     res.json({ message: 'Power value received' });
   } catch (error) {
@@ -44,9 +44,9 @@ async function executeSQLQuery(query) { //funzione generica per eseguire una que
 
 router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query con i dati presi dal front-end
   try {
-    console.log(`date end: ${dateend}`);
-    console.log(datestart);
-    console.log(dateend);
+    //console.log(`date end: ${dateend}`);
+    //console.log(datestart);
+    //console.log(dateend);
     const result = await executeSQLQuery(`
     EXEC [dbo].[SP_RECUPERA_DATI_STORICI_ENERGIA] 
         @TAGNAME = '${powerValue}' ,
@@ -55,7 +55,7 @@ router.get("/api/chartDateTime", async (req, res) => { //esecuzione della query 
     `);
     console.log(result)
     sql.close();
-    console.log('finito');
+    //console.log('finito');
     return res.status(201).send(result);
   } catch (error) {
     console.log(error);

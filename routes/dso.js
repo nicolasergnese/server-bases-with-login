@@ -13,8 +13,8 @@ router.get("/api/tablerequeststart", async (req, res) => { //qui prendo i risult
     try {
         const response = await fetch("https://emotion-projects.eu/marketplace/request");
         const responseDataDSO = await response.json();
-        console.log("The result is:", responseDataDSO);
-        console.log(isFirstAPIExecuted)
+        //console.log("The result is:", responseDataDSO);
+        //console.log(isFirstAPIExecuted)
         return res.status(201).send(responseDataDSO);
     } catch (error) {
         console.log(error);
@@ -23,7 +23,7 @@ router.get("/api/tablerequeststart", async (req, res) => { //qui prendo i risult
 });
 
 const sendDataEndExtraRequestIdToBackend = async (dateendDSO, datestartDSO, energyValueDSO, Requestid) => { //qui ci sono le tre api di asm
-    console.log(energyValueDSO);
+    //console.log(energyValueDSO);
     try {
         const firstApiPayload = {
             deadline: dateendDSO,
@@ -35,21 +35,21 @@ const sendDataEndExtraRequestIdToBackend = async (dateendDSO, datestartDSO, ener
             },
             body: JSON.stringify(firstApiPayload),
         });
-        console.log("First API call response: done");
+        //console.log("First API call response: done");
         //const response = await fetch("https://emotion-projects.eu/marketplace/request");
         const responseIDDSO = await response.json();
         //const requestIdArray = responseDataDSO.requests;
-        console.log("Response from GET request responsdataDso:", responseIDDSO);
+        //console.log("Response from GET request responsdataDso:", responseIDDSO);
         id = responseIDDSO.id;
-        console.log("ID:", id);
+        //console.log("ID:", id);
 
         const secondApiPayload = {
             extra: [parseInt(energyValueDSO), datestartDSO],
             request_id: id,
         };
-        console.log('id seconda api:', id)
-        console.log('energy seconda api:', parseInt(energyValueDSO))
-        console.log('date seconda api:', datestartDSO)
+        //console.log('id seconda api:', id)
+        //console.log('energy seconda api:', parseInt(energyValueDSO))
+        //console.log('date seconda api:', datestartDSO)
         await fetch("https://emotion-projects.eu/marketplace/request/register", {
             method: "POST",
             headers: {
@@ -57,12 +57,10 @@ const sendDataEndExtraRequestIdToBackend = async (dateendDSO, datestartDSO, ener
             },
             body: JSON.stringify(secondApiPayload),
         });
-        console.log(secondApiPayload)
+        //console.log(secondApiPayload)
         isFirstAPIExecuted = true;
-        console.log('ciao')
-
-        console.log("Third API call response: done");
-        console.log(id)
+        //console.log("Third API call response: done");
+        //console.log(id)
     } catch (error) {
         console.error("Error during API calls:", error);
     }
@@ -76,10 +74,10 @@ router.post("/api/dataenergyvalue", async (req, res) => {//qui prendo i valori d
     try {
         await sendDataEndExtraRequestIdToBackend(dateendDSO, datestartDSO, energyValueDSO, id); //prendendo i dati della request, applico la funzione sopra
         //getWinningOffer(id);
-        console.log('sendata:', dateendDSO)
-        console.log(datestartDSO)
-        console.log(energyValueDSO)
-        console.log(id)
+        //console.log('sendata:', dateendDSO)
+        //console.log(datestartDSO)
+        //console.log(energyValueDSO)
+        //console.log(id)
         res.json({ message: "Data received successfully" });
     } catch (error) {
         console.error("Error during API calls:", error);
@@ -92,8 +90,8 @@ router.get("/api/tablerequest", async (req, res) => { //qui prendo i risultati d
         if (isFirstAPIExecuted) {
             const response = await fetch("https://emotion-projects.eu/marketplace/request");
             const responseDataDSO = await response.json();
-            console.log("The result is:", responseDataDSO);
-            console.log(isFirstAPIExecuted)
+            //console.log("The result is:", responseDataDSO);
+            //console.log(isFirstAPIExecuted)
             return res.status(201).send(responseDataDSO);
         } else {
             return res.status(400).send("First API not executed");
@@ -108,7 +106,7 @@ let IDRequest = '';
 router.post("/api/IDRequestForOffers", async (req, res) => {//qui prendo i valori di energia, e delle date di inizio e fine
     try {
         IDRequest = req.body.id;
-        console.log('sendata:', IDRequest)
+        //console.log('sendata:', IDRequest)
         res.json({ message: "Data received successfully" });
     } catch (error) {
         console.error("Error during API calls:", error);
@@ -119,14 +117,14 @@ router.post("/api/IDRequestForOffers", async (req, res) => {//qui prendo i valor
 let deadline = '';
 router.get("/api/carddetails", async (req, res) => { //qui prendo i risultati del fetch e li mando al front-end per la tabella request
     try {
-        console.log('IDREQUEST:', IDRequest)
+        //console.log('IDREQUEST:', IDRequest)
         const urlApiCard = `https://emotion-projects.eu/marketplace/request/${IDRequest}`;
         const responseCard = await fetch(urlApiCard);
         const responseCardDSO = await responseCard.json();
-        console.log("The result card is:", responseCardDSO);
+        //console.log("The result card is:", responseCardDSO);
         // Accedi direttamente alla data di scadenza
         deadline = responseCardDSO.deadline;
-        console.log("deadline:", deadline);
+        //console.log("deadline:", deadline);
         return res.status(201).send(responseCardDSO);
     } catch (error) {
         console.log(error);
@@ -138,10 +136,10 @@ router.get("/api/carddetails", async (req, res) => { //qui prendo i risultati de
 let {format} = require('date-fns');
 const oggi = new Date(); // Ottieni la data odierna a mezzanotte
 const formattedToday = format(oggi, 'yyyy-MM-dd HH:mm:ss');
-console.log(formattedToday);
+//console.log(formattedToday);
 router.get('/api/offers', async (req, res) => { //funzione per riempire la tabella offers
     try {
-        console.log('getwinni', IDRequest)
+        //console.log('getwinni', IDRequest)
         const urlApi = `https://emotion-projects.eu/marketplace/offer?request=${IDRequest}`;
         //const urlApi = `https://emotion-projects.eu/marketplace/offer?request=1`;
         const response = await fetch(urlApi);
@@ -151,9 +149,9 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
         const extraValues = [];
         const IDValues = [];
         const dataToSendToFrontEnd = [];
-        console.log('ciao', dataOffer)
+        //console.log('ciao', dataOffer)
         const nonEmptyOffers = dataOffer.offers.filter(offer => Object.keys(offer).length > 0);//questo filtro lo uso per levare offerte nulle che mi danno problemi per calcolare il prezzo minimo
-        console.log('empty', nonEmptyOffers);
+        //console.log('empty', nonEmptyOffers);
         nonEmptyOffers.forEach(offer => {//ciclo ogni offerta
             const IDValue = offer.id;
             const author = offer.author
@@ -167,20 +165,20 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
             };
             dataToSendToFrontEnd.push(offerData)
         });
-        console.log('valori', extraValues)
+        //console.log('valori', extraValues)
         //console.log('winne', dataToSendToFrontEnd);
-        console.log('winnerID', getWinnerID(extraValues, IDValues))
-        console.log('minextravalue', getMinExtraValue(extraValues))
+        //console.log('winnerID', getWinnerID(extraValues, IDValues))
+        //console.log('minextravalue', getMinExtraValue(extraValues))
         res.json({
             dataOffer: dataToSendToFrontEnd,
             winnerID: getWinnerID(extraValues, IDValues),
             minExtraValue: getMinExtraValue(extraValues)
         });
-        console.log(getWinnerID(extraValues, IDValues))
+        //console.log(getWinnerID(extraValues, IDValues))
         const value1 = "decided";
         const value2 = [{ "id": getWinnerID(extraValues, IDValues) }];
-        console.log('put', value1)
-        console.log(value2)
+        //console.log('put', value1)
+        //console.log(value2)
         // Second PUT request payload
         const secondApiPayload = {
             state: value1,
@@ -188,10 +186,10 @@ router.get('/api/offers', async (req, res) => { //funzione per riempire la tabel
             //decision: [{ id: 3 }]
         };
         // Second PUT request
-        console.log('if deadline', deadline )
-        console.log('if formatted today', formattedToday )
+        //console.log('if deadline', deadline )
+        //console.log('if formatted today', formattedToday )
         if(deadline>=formattedToday) {
-        console.log('put', IDRequest)
+        //console.log('put', IDRequest)
         const urlApi2 = `https://emotion-projects.eu/marketplace/request/${IDRequest}`;
         const secondResponse = await fetch(urlApi2, {
             method: "PUT",

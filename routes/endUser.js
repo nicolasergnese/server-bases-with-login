@@ -15,10 +15,10 @@ router.post('/api/sensorIdServiceIdDateStartAndDateend', async (req, res) => { /
     dateStartNew = req.body.formattedDateStart;
     dateEndNew = req.body.formattedDateEnd;
     // Do whatever you want with the power value
-    console.log(`sensor id : ${sensorIdValue}`);
-    console.log(`ervice id: ${serviceIdValue}`);
-    console.log(`date start: ${dateStartNew}`);
-    console.log(`date end: ${dateEndNew}`);
+    //console.log(`sensor id : ${sensorIdValue}`);
+    //console.log(`ervice id: ${serviceIdValue}`);
+    //console.log(`date start: ${dateStartNew}`);
+    //console.log(`date end: ${dateEndNew}`);
     // Send a response to the client
     res.json({ message: 'Power value received' });
     //getDataFromProtectedAPI();
@@ -50,7 +50,7 @@ const getAccessToken = async () => {
       throw new Error('Failed to obtain access token');
     }
     const data = await response.json();
-    console.log('Access token:', data.access_token);
+    //console.log('Access token:', data.access_token);
     return data.access_token;
   } catch (error) {
     console.error('Error in getAccessToken:', error);
@@ -63,20 +63,20 @@ const { format, parseISO } = require('date-fns');
 router.get("/api/chartDateTimeNewEnergiot", async (req, res) => { //esecuzione della query con i dati presi dal front-end
   try {
     const accessToken = await getAccessToken();
-    console.log(' 2 Access token:', accessToken);
+    //console.log(' 2 Access token:', accessToken);
     // Formattare le date nel formato desiderato
     const dateStart = parseISO(dateStartNew);
     const dateEnd = parseISO(dateEndNew);
     const formattedStart = format(dateStart, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
     const formattedEnd = format(dateEnd, 'yyyy-MM-dd HH:mm:ss.SSSSSS');
-    console.log("Formatted Start:", formattedStart);
-    console.log("Formatted End:", formattedEnd);
+    //console.log("Formatted Start:", formattedStart);
+    //console.log("Formatted End:", formattedEnd);
     const apiUrl = `http://172.16.1.9:30631/device-indexing/get_measurements/${sensorIdValue}/${serviceIdValue}/${formattedStart}/${formattedEnd}`;
-    console.log("apiurl", apiUrl)
-    console.log(`sensor id : ${sensorIdValue}`);
-    console.log(`ervice id: ${serviceIdValue}`);
-    console.log(`date start: ${formattedStart}`);
-    console.log(`date end: ${formattedEnd}`);
+    //console.log("apiurl", apiUrl)
+    //console.log(`sensor id : ${sensorIdValue}`);
+    //console.log(`ervice id: ${serviceIdValue}`);
+    //console.log(`date start: ${formattedStart}`);
+    //console.log(`date end: ${formattedEnd}`);
     const response = await fetch(apiUrl, {
       headers: {
         'Fiware-Service': 'energy',
@@ -85,7 +85,7 @@ router.get("/api/chartDateTimeNewEnergiot", async (req, res) => { //esecuzione d
       },
     });
     const data = await response.json();
-    console.log(data); // Dati ricevuti dall'API
+    //console.log(data); // Dati ricevuti dall'API
     return res.status(201).send(data);
   } catch (error) {
     console.error(error);

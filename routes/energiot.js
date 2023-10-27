@@ -24,7 +24,7 @@ const keycloakClientCredentials = {
         throw new Error('Failed to obtain access token');
       }
       const data = await response.json();
-      console.log('Access token:', data.access_token);
+      //console.log('Access token:', data.access_token);
       return data.access_token;
     } catch (error) {
       console.error('Error in getAccessToken:', error);
@@ -36,9 +36,9 @@ const keycloakClientCredentials = {
 router.get("/api/chartDateTimeEnergiot", async (req, res) => { //esecuzione della query con i dati presi dal front-end
     try {
       const accessToken = await getAccessToken();
-      console.log(' 2 Access token:', accessToken);
+      //console.log(' 2 Access token:', accessToken);
       const apiUrl = 'http://172.16.1.9:30631/device-indexing/get_last_n_records/ASM03000006?last_n=144' 
-      console.log("apiurl", apiUrl)
+      //console.log("apiurl", apiUrl)
       const response = await fetch(apiUrl, {
         headers: {
           'Fiware-Service': 'energy',
@@ -47,7 +47,7 @@ router.get("/api/chartDateTimeEnergiot", async (req, res) => { //esecuzione dell
         },
       });
       const data = await response.json();
-      console.log(data); // Dati ricevuti dall'API
+      //console.log(data); // Dati ricevuti dall'API
       return res.status(201).send(data);
     } catch (error) {
       console.error(error);
